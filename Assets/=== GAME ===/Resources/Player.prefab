@@ -375,6 +375,8 @@ GameObject:
   - component: {fileID: 4441341783736396574}
   - component: {fileID: 3626193611199431784}
   - component: {fileID: 3015776435931382606}
+  - component: {fileID: 85897417238173401}
+  - component: {fileID: 6468159671622196515}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -641,6 +643,42 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &85897417238173401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2427062118266592131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c90132c67e8bab542b0bf811d5d1b939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundCheckerRadius: 0.25
+  groundCheckerOffset: {x: 0, y: 0.24}
+  rb: {fileID: 699333348163784463}
+  moveSpeed: 25
+  jumpForce: 12
+  allowJump: 1
+  isGrounded: 1
+--- !u!114 &6468159671622196515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2427062118266592131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 146df27d206af8645b65a1357e07b1bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keymapLeft: 97
+  keymapRight: 100
+  keymapFire: 323
+  keymapJump: 32
+  acceleration: 20
 --- !u!1 &2735647564321984491
 GameObject:
   m_ObjectHideFlags: 0

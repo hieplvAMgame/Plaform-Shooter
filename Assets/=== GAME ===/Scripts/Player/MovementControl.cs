@@ -17,7 +17,7 @@ public class MovementControl : MonoBehaviour
     public float moveSpeed;
     public float jumpForce;
 
-    public bool allowJump { get; protected set; }
+    public bool allowJump /*{ get; protected set; }*/;
 
     public bool hasRigidbody { get { return rb; } }
     Vector2 m;  // movement
@@ -50,19 +50,20 @@ public class MovementControl : MonoBehaviour
 
     // Internal:
     float inputX;
-
+    PlayerInput input;
     void Awake()
     {
         if (!rb) rb = GetComponent<Rigidbody2D>();
+        input = GetComponent<PlayerInput>();
     }
 
     void Update()
     {
-        inputX = Input.GetAxis("Horizontal");
+        inputX = input.Horizontal;
         m.x = isGrounded ? inputX : inputX != 0 ? inputX : movement.x;
         if (!isGrounded)
         {
-            m.x = Mathf.MoveTowards(movement.x, 0, Time.deltaTime);
+            m.x = Mathf.MoveTowards(movement.x, 0, Time.deltaTime/5);     // reduce movement in air
         }
 
         // Check if grounded:
@@ -90,6 +91,8 @@ public class MovementControl : MonoBehaviour
             veloc.x = movement.x * (moveSpeed / 10);
             rb.velocity = veloc;
         }
+        if (input.IsJump && isGrounded && allowJump)
+            Jump();
     }
 
     // For local movement controlling: 
