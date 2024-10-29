@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class MovementControl : MonoBehaviour
 {
-    [Header("---CONFID---:")]
+    [Header("---CONFIG---:")]
     [SerializeField] float groundCheckerRadius;
     [SerializeField] Vector2 groundCheckerOffset;
 
@@ -51,24 +51,28 @@ public class MovementControl : MonoBehaviour
     // Internal:
     float inputX;
     PlayerInput input;
+    Player player;
+    [SerializeField] GameObject landing;
     void Awake()
     {
         if (!rb) rb = GetComponent<Rigidbody2D>();
         input = GetComponent<PlayerInput>();
+        player = GetComponent<Player>();
     }
 
     void Update()
     {
         inputX = input.Horizontal;
+        if (inputX > 0) transform.localEulerAngles = Vector3.zero;
+        else if (inputX < 0) transform.localEulerAngles = Vector3.up * 180;
         m.x = isGrounded ? inputX : inputX != 0 ? inputX : movement.x;
         if (!isGrounded)
         {
-            m.x = Mathf.MoveTowards(movement.x, 0, Time.deltaTime/5);     // reduce movement in air
+            m.x = Mathf.MoveTowards(movement.x, 0, Time.deltaTime / 5);     // reduce movement in air
         }
 
         // Check if grounded:
         allowJump = true;
-        isGrounded = false;
         Collider2D[] cols = Physics2D.OverlapCircleAll(groundCheckerOffset + new Vector2(transform.position.x, transform.position.y), groundCheckerRadius);
         for (int i = 0; i < cols.Length; i++)
         {
@@ -78,7 +82,11 @@ public class MovementControl : MonoBehaviour
             }
             if (cols[i].gameObject != gameObject && !cols[i].isTrigger && !cols[i].CompareTag("Portal"))
             {
-                if (!isGrounded) isGrounded = true;
+                if (!isGrounded)
+                {
+                    PoolingObject.Instance.SpawnFromPool(landing, transform.position, Quaternion.identity);
+                    isGrounded = true;
+                }
             }
         }
     }
@@ -90,6 +98,10 @@ public class MovementControl : MonoBehaviour
             Vector2 veloc = rb.velocity;
             veloc.x = movement.x * (moveSpeed / 10);
             rb.velocity = veloc;
+            if (rb.velocity != Vector2.zero && isGrounded)
+                player.currentAnims.PlayAnimMove();
+            else
+                player.currentAnims.PlayAnimIdle();
         }
         if (input.IsJump && isGrounded && allowJump)
             Jump();
@@ -112,6 +124,7 @@ public class MovementControl : MonoBehaviour
 
         // Don't allow jumping right after a jump:
         allowJump = false;
+        isGrounded = false;
     }
 
     public void DestroyRigidbody()
