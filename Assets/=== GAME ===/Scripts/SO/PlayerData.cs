@@ -23,7 +23,7 @@ public class PlayerData : ScriptableObject
         set
         {
             currentHP = value <= 0 ? 0 : Mathf.Min(value, maxHP);
-            if (value <= 0)
+            if (currentHP == 0)
                 onPlayerDie?.Invoke();
         }
     }
@@ -44,4 +44,15 @@ public class PlayerData : ScriptableObject
         }
         currentHP += value;
     }
+    public void ReduceHP(int value = 0)
+    {
+        CurrentHP -= value;
+        Debug.Log($"Reduce {value} hp! ");
+    }
+}
+public interface IDamageable
+{
+    bool IsShoot { get;}
+    void TakeDamage(int damage);
+    string Tag { get; }
 }

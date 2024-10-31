@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Portal
   - JumpPad
+  - Ground
+  - Enemy
   layers:
   - Default
   - TransparentFX

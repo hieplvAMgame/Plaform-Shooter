@@ -29,4 +29,8 @@ public class PlayerInput : MonoBehaviour
         }
     }
     public bool IsJump => Input.GetKey(keymapJump);
+
+    public bool IsShoot => Input.GetMouseButton(0) || Input.GetKey(keymapFire);
+
+    public Vector3 MousePos => Camera.main.ScreenToWorldPoint(Input.mousePosition);
 }
