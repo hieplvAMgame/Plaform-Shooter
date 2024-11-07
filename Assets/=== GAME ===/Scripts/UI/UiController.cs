@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class UiController : Singleton<UiController>
 {
-    [SerializeField] CharacterHPBar bar;
+    [SerializeField] public CharacterHPBar bar;
     [SerializeField] Transform parent;
     public void AddBar(int maxVal,Transform transform, out CharacterHPBar result)
     {

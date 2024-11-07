@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -58,6 +59,7 @@ public class MovementControl : MonoBehaviour
         if (!rb) rb = GetComponent<Rigidbody2D>();
         input = GetComponent<PlayerInput>();
         player = GetComponent<Player>();
+        canShowLandingAgain = true;
     }
 
     void Update()
@@ -84,13 +86,25 @@ public class MovementControl : MonoBehaviour
             {
                 if (!isGrounded)
                 {
-                    PoolingObject.Instance.SpawnFromPool(landing, transform.position, Quaternion.identity);
+                    if (canShowLandingAgain)
+                    {
+                        PoolingObject.Instance.SpawnFromPool(landing, transform.position, Quaternion.identity);
+                        canShowLandingAgain = false;
+                        DOVirtual.DelayedCall(.1f, () => canShowLandingAgain = true);
+                        //Invoke(nameof(ActiveShowLanedingAgain), .1f);
+                    }
                     isGrounded = true;
                 }
             }
         }
     }
 
+    //void ActiveShowLanedingAgain()
+    //{
+    //    canShowLandingAgain = true;
+    //}
+
+    bool canShowLandingAgain = true;
     void FixedUpdate()
     {
         if (rb)

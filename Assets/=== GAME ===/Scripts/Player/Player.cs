@@ -7,13 +7,16 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] List<AnimationController> anims = new List<AnimationController>();
     [SerializeField] List<PlayerData> playerDatas = new List<PlayerData>();
 
+    [Space]
+    [SerializeField] Weapon weapon;
+
     [HideInInspector] public AnimationController currentAnims;
     [HideInInspector] public PlayerData currentPlayer;
     CharacterHPBar hpBar;
 
-    public bool IsShoot { get=>GetComponent<PlayerInput>().IsShoot; }
+    public bool IsShoot { get => GetComponent<PlayerInput>().IsShoot; }
 
-    public string Tag =>gameObject.tag;
+    public string Tag => gameObject.tag;
 
     private void Awake()
     {
@@ -35,7 +38,8 @@ public class Player : MonoBehaviour, IDamageable
     IEnumerator Start()
     {
         yield return new WaitUntil(() => UiController.Instance);
-        UiController.Instance.AddBar(currentPlayer.maxHP, transform,out hpBar);
+        UiController.Instance.AddBar(currentPlayer.maxHP, transform, out hpBar);
+        weapon.RegistWithUIBar(hpBar);
     }
 
     [ContextMenu("Set Dead")]
@@ -45,5 +49,15 @@ public class Player : MonoBehaviour, IDamageable
     {
         currentPlayer.ReduceHP(damage);
         hpBar.ChangeValue(currentPlayer.CurrentHP);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag(GAME_TAG.Picker))
+        {
+            collision.TryGetComponent(out WeaponPicker picker);
+            picker.OnClaimPicker(out int id);
+            weapon.SelectWeapon(id);
+        }
     }
 }
